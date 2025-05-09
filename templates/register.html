@@ -1,21 +1,46 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 
 {% block content %}
-<h2>Register</h2>
-<form method="POST" enctype="multipart/form-data">
-    {{ form.hidden_tag() }}
-    <div class="mb-3">
-        {{ form.username.label(class="form-label") }}
-        {{ form.username(class="form-control") }}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Регистрация нового пользователя</h4>
+                </div>
+
+                <div class="card-body">
+                    <form method="POST" enctype="multipart/form-data">
+                        {{ form.hidden_tag() }}
+
+                        <div class="mb-3">
+                            <label class="form-label">Имя пользователя</label>
+                            {{ form.username(class="form-control") }}
+                            <small class="form-text text-muted">
+                                Не менее 3 символов
+                            </small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Пароль</label>
+                            {{ form.password(class="form-control") }}
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Аватар профиля</label>
+                            {{ form.avatar(class="form-control") }}
+                            <small class="form-text text-muted">
+                                Форматы: JPG, PNG (макс. 5МБ)
+                            </small>
+                        </div>
+
+                        <div class="d-grid">
+                            {{ form.submit(class="btn btn-success") }}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="mb-3">
-        {{ form.password.label(class="form-label") }}
-        {{ form.password(class="form-control") }}
-    </div>
-    <div class="mb-3">
-        {{ form.avatar.label(class="form-label") }}
-        {{ form.avatar(class="form-control") }}
-    </div>
-    {{ form.submit(class="btn btn-success") }}
-</form>
+</div>
 {% endblock %}
