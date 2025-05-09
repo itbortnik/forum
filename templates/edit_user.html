@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h2 class="my-4">Edit User: {{ user.username }}</h2>
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        <div class="mb-3">
+            {{ form.role.label(class="form-label") }}
+            {{ form.role(class="form-select") }}
+        </div>
+        <div class="mb-3 form-check">
+            {{ form.banned(class="form-check-input") }}
+            {{ form.banned.label(class="form-check-label") }}
+        </div>
+        <div class="mb-3 form-check">
+            {{ form.muted(class="form-check-input") }}
+            {{ form.muted.label(class="form-check-label") }}
+        </div>
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+    </form>
+</div>
+{% endblock %}

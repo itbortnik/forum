@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="card shadow-lg mb-4">
+        <div class="card-header bg-secondary text-white">
+            <h2 class="mb-0">{{ topic.title }}</h2>
+            <small>
+                Автор:
+                <a href="{{ url_for('profile', user_id=topic.author.id) }}"
+                   class="text-white">
+                   {{ topic.author.username }}
+                </a>
+                | Создано: {{ topic.created_at.strftime('%d.%m.%Y в %H:%M') }}
+                | Категория: {{ topic.category.name }}
+            </small>
+        </div>
+
+        <div class="card-body">
+            <div class="mb-4">
+                <p class="lead">{{ topic.content }}</p>
+            </div>
+
+            <hr>
+
+            <h4 class="mb-3">Обсуждение ({{ topic.comments.count() }})</h4>
+
+            {% if current_user.is_authenticated and not current_user.banned %}
+            <div class="card mb-4">
+                <div class="card-body">
+                    <form method="POST">
+                        {{ form.hidden_tag() }}
+                        <div class="mb-3">
+                            {{ form.content(class="form-control", rows=3,
+                                          placeholder="Напишите ваш комментарий...") }}
+                        </div>
+                        <div class="d-grid">
+                            {{ form.submit(class="btn btn-primary") }}
+                        </div>
+                    </form>
+                </div>
+            </div>
+            {% elif not current_user.is_authenticated %}
+            <div class="alert alert-warning">
+                <a href="{{ url_for('login') }}" class="alert-link">Войдите</a>,
+                чтобы участвовать в обсуждении
+            </div>
+            {% endif %}
+
+            {% for comment in comments %}
+            <div class="card mb-2">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div class="flex-grow-1">
+                            <div class="d-flex align-items-center mb-2">
+                                <img src="{{ url_for('static', filename='avatars/' + (comment.author.avatar if comment.author.avatar else 'default.png')) }}"
+                                     class="rounded-circle me-2"
+                                     width="40"
+                                     height="40"
+                                     alt="Аватар">
+                                <div>
+                                    <h6 class="mb-0">
+                                        <a href="{{ url_for('profile', user_id=comment.author.id) }}"
+                                           class="text-decoration-none">
+                                           {{ comment.author.username }}
+                                        </a>
+                                    </h6>
+                                    <small class="text-muted">
+                                        {{ comment.created_at.strftime('%d.%m.%Y в %H:%M') }}
+                                    </small>
+                                </div>
+                            </div>
+                            <p class="mb-0">{{ comment.content }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <div class="alert alert-info">
+                Пока нет комментариев. Будьте первым, кто оставит сообщение!
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h2 class="my-4">User Management</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Role</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td>{{ user.username }}</td>
+                <td>{{ user.role|capitalize }}</td>
+                <td>
+                    {% if user.banned %}<span class="badge bg-danger">Banned</span>{% endif %}
+                    {% if user.muted %}<span class="badge bg-warning">Muted</span>{% endif %}
+                </td>
+                <td>
+                    <a href="{{ url_for('edit_user', user_id=user.id) }}" 
+                       class="btn btn-sm btn-primary">Edit</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
