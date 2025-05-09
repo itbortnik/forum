@@ -1,11 +1,17 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 
 {% block content %}
-  <h2>Создать тему в категории "{{ category.title }}"</h2>
-  <form method="POST">
-    {{ form.hidden_tag() }}
-    {{ form.title.label }} {{ form.title(class="form-control") }}<br>
-    {{ form.body.label }} {{ form.body(class="form-control") }}<br>
-    {{ form.submit(class="btn btn-success") }}
-  </form>
+    <h2>Create New Topic in {{ category.name }}</h2>
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        <div class="mb-3">
+            {{ form.title.label(class="form-label") }}
+            {{ form.title(class="form-control") }}
+        </div>
+        <div class="mb-3">
+            {{ form.content.label(class="form-label") }}
+            {{ form.content(class="form-control", rows=5) }}
+        </div>
+        {{ form.submit(class="btn btn-primary") }}
+    </form>
 {% endblock %}
