@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="card shadow">
+        <div class="card-header bg-info text-white">
+            <h3 class="mb-0">Профиль пользователя</h3>
+        </div>
+
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4 text-center">
+                    <img src="{{ url_for('static', filename='avatars/' + (user.avatar if user.avatar else 'default.png')) }}"
+                         class="img-thumbnail mb-3"
+                         style="width: 200px; height: 200px; object-fit: cover;"
+                         alt="Аватар профиля">
+
+                    <h4>{{ user.username }}</h4>
+                    <div class="mb-3">
+                        {% if user.banned %}
+                        <span class="badge bg-danger">Заблокирован</span>
+                        {% endif %}
+                        {% if user.muted %}
+                        <span class="badge bg-warning">Ограниченный доступ</span>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="col-md-8">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5>Информация</h5>
+                        </div>
+                        <div class="card-body">
+                            <dl class="row">
+                                <dt class="col-sm-3">Статус:</dt>
+                                <dd class="col-sm-9">
+                                    {{ 'Администратор' if user.role == 'admin'
+                                       else 'Модератор' if user.role == 'moderator'
+                                       else 'Пользователь' }}
+                                </dd>
+
+                                <dt class="col-sm-3">Зарегистрирован:</dt>
+                                <dd class="col-sm-9">
+                                    {{ user.topics.first().created_at.strftime('%d.%m.%Y') if user.topics.first() else 'Нет информации' }}
+                                </dd>
+
+                                <dt class="col-sm-3">Активность:</dt>
+                                <dd class="col-sm-9">
+                                    Создано тем: {{ user.topics.count() }}<br>
+                                    Комментариев: {{ user.comments.count() }}
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
