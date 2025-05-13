@@ -1,23 +1,56 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container">
-    <h2 class="my-4">Edit User: {{ user.username }}</h2>
-    <form method="POST">
-        {{ form.hidden_tag() }}
-        <div class="mb-3">
-            {{ form.role.label(class="form-label") }}
-            {{ form.role(class="form-select") }}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4>Редактирование пользователя: {{ user.username }}</h4>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        {{ form.hidden_tag() }}
+
+                        {% if form.role and current_user.role == 'admin' %}
+                        <div class="mb-3">
+                            {{ form.role.label(class="form-label") }}
+                            {{ form.role(class="form-select") }}
+                        </div>
+                        {% endif %}
+
+                        <div class="mb-3 form-check">
+                            {{ form.banned(class="form-check-input") }}
+                            <label class="form-check-label">
+                                {{ form.banned.label.text }}
+                                {% if user.banned %}
+                                <span class="badge bg-danger">Сейчас заблокирован</span>
+                                {% endif %}
+                            </label>
+                        </div>
+
+                        <div class="mb-3 form-check">
+                            {{ form.muted(class="form-check-input") }}
+                            <label class="form-check-label">
+                                {{ form.muted.label.text }}
+                                {% if user.muted %}
+                                <span class="badge bg-warning">Сейчас ограничен</span>
+                                {% endif %}
+                            </label>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-save"></i> Сохранить
+                            </button>
+                            <a href="{{ url_for('admin_users') }}" class="btn btn-secondary">
+                                <i class="bi bi-arrow-left"></i> Назад
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
-        <div class="mb-3 form-check">
-            {{ form.banned(class="form-check-input") }}
-            {{ form.banned.label(class="form-check-label") }}
-        </div>
-        <div class="mb-3 form-check">
-            {{ form.muted(class="form-check-input") }}
-            {{ form.muted.label(class="form-check-label") }}
-        </div>
-        <button type="submit" class="btn btn-primary">Save Changes</button>
-    </form>
+    </div>
 </div>
 {% endblock %}
