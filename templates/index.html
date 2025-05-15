@@ -8,8 +8,17 @@
     <div class="card shadow mb-4">
         <div class="card-header bg-primary text-white">
             <div class="d-flex justify-content-between align-items-center">
-                <h4 class="mb-0">{{ category.name }}</h4>
-                <small>{{ category.description }}</small>
+                <div>
+                    <h4 class="mb-0">{{ category.name }}</h4>
+                    <small>{{ category.description }}</small>
+                </div>
+                {% if current_user.role == 'admin' %}
+                <a href="{{ url_for('delete_category', category_id=category.id) }}"
+                   class="btn btn-danger btn-sm"
+                   onclick="return confirm('Удалить категорию и все связанные темы?')">
+                   <i class="bi bi-trash"></i>
+                </a>
+                {% endif %}
             </div>
         </div>
 

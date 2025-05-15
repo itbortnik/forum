@@ -7,6 +7,9 @@
             <div class="card shadow">
                 <div class="card-header bg-primary text-white">
                     <h4>Редактирование пользователя: {{ user.username }}</h4>
+                    {% if user.role == 'admin' %}
+                    <span class="badge bg-danger">Администратор</span>
+                    {% endif %}
                 </div>
                 <div class="card-body">
                     <form method="POST">
@@ -15,26 +18,44 @@
                         {% if form.role and current_user.role == 'admin' %}
                         <div class="mb-3">
                             {{ form.role.label(class="form-label") }}
-                            {{ form.role(class="form-select") }}
+                            {{ form.role(
+                                class="form-select",
+                                disabled=(user.role == 'admin')
+                            ) }}
+                            {% if user.role == 'admin' %}
+                            <small class="text-muted">Роль администратора нельзя изменить</small>
+                            {% endif %}
                         </div>
                         {% endif %}
 
                         <div class="mb-3 form-check">
-                            {{ form.banned(class="form-check-input") }}
+                            {{ form.banned(
+                                class="form-check-input",
+                                disabled=(user.role == 'admin' or user.id == current_user.id)
+                            ) }}
                             <label class="form-check-label">
                                 {{ form.banned.label.text }}
                                 {% if user.banned %}
                                 <span class="badge bg-danger">Сейчас заблокирован</span>
                                 {% endif %}
+                                {% if user.role == 'admin' or user.id == current_user.id %}
+                                <span class="text-muted">(недоступно для изменения)</span>
+                                {% endif %}
                             </label>
                         </div>
 
                         <div class="mb-3 form-check">
-                            {{ form.muted(class="form-check-input") }}
+                            {{ form.muted(
+                                class="form-check-input",
+                                disabled=(user.role == 'admin' or user.id == current_user.id)
+                            ) }}
                             <label class="form-check-label">
                                 {{ form.muted.label.text }}
                                 {% if user.muted %}
                                 <span class="badge bg-warning">Сейчас ограничен</span>
+                                {% endif %}
+                                {% if user.role == 'admin' or user.id == current_user.id %}
+                                <span class="text-muted">(недоступно для изменения)</span>
                                 {% endif %}
                             </label>
                         </div>

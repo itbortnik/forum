@@ -293,23 +293,26 @@ def edit_user(user_id):
         return redirect(url_for('index'))
 
     user = User.query.get_or_404(user_id)
-
-    if current_user.role == 'moderator':
-        if user.role in ['admin', 'moderator']:
-            flash('Недостаточно прав для редактирования этого пользователя', 'danger')
-            return redirect(url_for('admin_users'))
-
     form = UserEditForm(obj=user)
 
-    if current_user.role == 'moderator':
-        del form.role
+    if current_user.role == 'moderator' and user.role in ['admin', 'moderator']:
+        flash('Недостаточно прав', 'danger')
+        return redirect(url_for('admin_users'))
 
     if form.validate_on_submit():
-        if current_user.role == 'admin':
-            user.role = form.role.data
+        if user.id == current_user.id:
+            if form.role.data != current_user.role or form.banned.data or form.muted.data:
+                flash('Вы не можете изменять свою роль или блокировать себя', 'danger')
+                return redirect(url_for('edit_user', user_id=user_id))
 
-        user.banned = form.banned.data
-        user.muted = form.muted.data
+        if user.role == 'admin' and user.id != current_user.id:
+            flash('Нельзя редактировать других администраторов', 'danger')
+            return redirect(url_for('admin_users'))
+
+        if current_user.role == 'admin' and user.role != 'admin':
+            user.role = form.role.data
+            user.banned = form.banned.data
+            user.muted = form.muted.data
 
         db.session.commit()
         flash('Изменения сохранены', 'success')
